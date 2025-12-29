@@ -13,7 +13,13 @@ export const BASE_URL = "http://localhost/UniYatWoon_AdminPanel"
 
    fetchposts: `${BASE_URL}/fetchposts.php`,
 
-   addposts: `${BASE_URL}/addposts.php`
+   fetchreportposts: `${BASE_URL}/fetchreportposts.php`,
+
+   reportposts: `${BASE_URL}/reportposts.php`,
+
+   addposts: `${BASE_URL}/addposts.php`,
+
+   deletePost: `${BASE_URL}/deletepost.php`,
 
   }
 

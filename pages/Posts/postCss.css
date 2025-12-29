@@ -10,6 +10,7 @@
     height: 300px;
     overflow: hidden;
     box-shadow: 1px 3px 3px black;
+    position: relative;
 }
 .username {
     position: relative;
@@ -40,4 +41,57 @@
      top: 10px;
      left: 10px;
      width: 330px;
+}
+.reportForm {
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    transform: translateY(-50%);
+    background-color: #F0FFFF;
+    z-index: 9;
+    padding: 10px;
+    width: 80%;
+    height: 80%;
+    border-radius: 10px;
+    box-shadow: 1px 3px 5px #000;
+}
+.reportReasons {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    padding-inline-start: 20px;
+}
+.reportReasons > label {
+    display: block;
+    width: max-content;
+}
+.reportBtn {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    font-size: 8px;
+    padding: 2px;
+    color: red;
+    border-radius: 0;
+}
+.reportpost_container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+.reportpostCard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: aqua;
+    width: max-content;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.mediaWrapper > img {
+    width: 250px;
 }

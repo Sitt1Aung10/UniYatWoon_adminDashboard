@@ -1,6 +1,7 @@
 import React from 'react'
 import FetchPosts from './fetchposts'
 import Addposts from './addposts'
+import Fetchreportposts from './fetchreportposts'
 import MainLayout from '../../src/components/layout'
 
 const postsRoute =  {
@@ -14,6 +15,10 @@ const postsRoute =  {
          {
             path: '/addposts',
             element: <Addposts />,
+         },
+         {
+            path : '/reports',
+            element: <Fetchreportposts />,
          }
      ]
  }
