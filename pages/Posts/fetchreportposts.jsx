@@ -4,8 +4,9 @@ import { BASE_URL } from '../../endpoints/endpoints'
 import { useState, useEffect } from 'react'
 import '../Posts/postCss.css'
 const Fetchreportposts = () => {
-    const [reportPosts, setReportPosts] = useState([]);
-    const [selectedPostId, setSelectedPostId] = useState(null);
+  const [reportPosts, setReportPosts] = useState([]);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [expandedPost, setExpandedPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,32 +32,59 @@ const Fetchreportposts = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (postId) => {
-  if (!window.confirm("Are you sure you want to delete this post?")) return;
+  const mediaStyle = {
+    minWidth: "330px",
+    objectFit: "contain",
+    scrollSnapAlign: "start",
+  };
 
-  try {
-    const res = await fetch(endpoints.deletePost, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ post_id: postId }),
-    });
+  const arrowStyle = (side) => ({
+    position: "absolute",
+    top: "50%",
+    transform: "translateY(-50%)",
+    [side]: "5px",
+    background: "rgba(0,0,0,0.5)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "50%",
+    width: "30px",
+    height: "30px",
+    fontSize: "25px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    zIndex: 2,
+  });
 
-    const data = await res.json();
 
-    if (!res.ok) throw new Error(data.message || "Delete failed");
 
-    // Remove deleted post from UI
-    setReportPosts(prev =>
-      prev.filter(r => r.Reported_post_id !== postId)
-    );
+  const handleDelete = async (post_id) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
 
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete post");
-  }
-};
+    try {
+      const res = await fetch(endpoints.deletePost, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ Reported_post_id: post_id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Delete failed");
+
+      // Remove deleted post from UI
+      setReportPosts(prev =>
+        prev.filter(r => r.Reported_post_id !== post_id)
+      );
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete post");
+    }
+  };
 
 
   if (loading) return <p>Loading reports...</p>;
@@ -72,32 +100,82 @@ const Fetchreportposts = () => {
 
           <p><strong>Reporter:</strong> {report.Reporter_username}</p>
           <p><strong>Reason:</strong> {report.Reason}</p>
-          <p>{report.Description}</p>
+          <p><strong>Post Owner : {report.Username} </strong></p>
+          <p
+            style={{
+              maxHeight: expandedPost === report.Reported_post_id ? "1000px" : "20px",
+              overflow: "hidden",
+              transition: "max-height 0.3s ease",
+            }}
+          >
+            {report.Description}
+          </p>
 
           {/* MEDIA */}
+          {/* MEDIA */}
           {report.media.length > 0 && (
-            <div className="mediaWrapper">
-              {report.media.map((m, idx) =>
-                m.Media_type === "image" ? (
-                  <img
-                    key={idx}
-                    className="media"
-                    src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
-                    alt="post media"
-                  />
-                ) : (
-                  <video
-                    key={idx}
-                    className="media"
-                    controls
-                    src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
-                  />
-                )
-              )}
-              <br></br>
-               <button  onClick={() => handleDelete(report.Reported_post_id)}  style={{backgroundColor:'red',color:'black',fontWeight:'bolder'}}>Delete Post</button>
+            <div style={{ position: "relative", width: "330px" }}>
+
+              {/* LEFT ARROW */}
+              <button
+                onClick={(e) => {
+                  const box = e.currentTarget.nextSibling;
+                  box.scrollBy({ left: -330, behavior: "smooth" });
+                }}
+                style={arrowStyle("left")}
+              >
+                ‹
+              </button>
+
+              {/* MEDIA CONTAINER */}
+              <div
+                className="hide-scrollbar"
+                style={{
+                  display: "flex",
+                  overflowX: "auto",
+                  scrollSnapType: "x mandatory",
+                }}
+              >
+                {report.media.map((m, idx) =>
+                  m.Media_type === "image" ? (
+                    <img
+                      key={idx}
+                      src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                      alt="post media"
+                      style={mediaStyle}
+                    />
+                  ) : (
+                    <video
+                      key={idx}
+                      controls
+                      src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                      style={mediaStyle}
+                    />
+                  )
+                )}
+              </div>
+
+              {/* RIGHT ARROW */}
+              <button
+                onClick={(e) => {
+                  const box = e.currentTarget.previousSibling;
+                  box.scrollBy({ left: 330, behavior: "smooth" });
+                }}
+                style={arrowStyle("right")}
+              >
+                ›
+              </button>
+
+              <br />
+              <button
+                onClick={() => handleDelete(report.Reported_post_id)}
+                style={{ backgroundColor: "red", color: "black", fontWeight: "bolder" }}
+              >
+                Delete Post
+              </button>
             </div>
           )}
+
         </div>
       ))}
     </div>

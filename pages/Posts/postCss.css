@@ -4,57 +4,88 @@
     margin-top: 50px;
     margin-left: 20px;
 }
+
 .postCard {
-    background-color: azure;
     width: 350px;
-    height: 300px;
-    overflow: hidden;
+    height: max-content;
+    /* overflow: hidden; */
     box-shadow: 1px 3px 3px black;
     position: relative;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    text-align: left;
 }
+
 .username {
     position: relative;
-    left: -60px;
-    top: 25px;
+    left: 65px;
+    top: 30px;
 }
+
 .pf {
     width: 50px;
-    border-radius: 50%;
+    border-radius: 5px;
     position: relative;
     top: -10px;
     left: 10px;
 }
+
 .created_at {
     position: relative;
-    right: -100px;
+    right: -220px;
     top: -10px;
     font-size: 12px;
     color: gray;
 }
+
 .description {
+    position: absolute;
+    top: 90px;
+    left: 10px;
+}
+
+.media_container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 20px;
+    height: 200px;
+    border-top: 1px solid #0000001a;
+    overflow-y: hidden;
+    /* overflow-x: hidden; */
     position: relative;
-    top: 0px;
-    left: -40px;
+    top: 5px;
+    left: -5px;
+    z-index: -1;
 }
-.media {
-     position: relative;
-     top: 10px;
-     left: 10px;
-     width: 330px;
+
+
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
 }
+
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
 .reportForm {
     position: absolute;
     top: 50%;
     left: 25px;
     transform: translateY(-50%);
-    background-color: #F0FFFF;
     z-index: 9;
+    background-color: #fff;
     padding: 10px;
     width: 80%;
     height: 80%;
     border-radius: 10px;
     box-shadow: 1px 3px 5px #000;
 }
+
 .reportReasons {
     display: flex;
     flex-direction: column;
@@ -64,10 +95,12 @@
     padding-top: 20px;
     padding-inline-start: 20px;
 }
-.reportReasons > label {
+
+.reportReasons>label {
     display: block;
     width: max-content;
 }
+
 .reportBtn {
     position: absolute;
     top: 0px;
@@ -77,21 +110,26 @@
     color: red;
     border-radius: 0;
 }
+
 .reportpost_container {
     display: grid;
     grid-template-columns: auto auto auto auto;
     margin-top: 50px;
     margin-left: 20px;
 }
+
 .reportpostCard {
     display: flex;
     flex-direction: column;
+    justify-content: left;
+    text-align: left;
     gap: 5px;
-    background-color: aqua;
-    width: max-content;
+    width: 350px;
     padding: 20px;
     box-sizing: border-box;
+    box-shadow: 1px 2px 2px #000;
 }
-.mediaWrapper > img {
+
+.mediaWrapper>img {
     width: 250px;
 }

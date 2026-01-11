@@ -3,13 +3,17 @@ import users from "../pages/Users/users";
 export const BASE_URL = "http://localhost/UniYatWoon_AdminPanel"
 
   const endpoints = {
-   admin: `${BASE_URL}/admin.php`,
-
    users: `${BASE_URL}/users.php`,
 
    login: `${BASE_URL}/login.php`,
 
+   logout: `${BASE_URL}/logout.php`,
+
    get_session: `${BASE_URL}/get_session.php`,
+
+   profile: `${BASE_URL}/profile.php`,
+
+   ban_account: `${BASE_URL}/ban_account.php`,
 
    fetchposts: `${BASE_URL}/fetchposts.php`,
 

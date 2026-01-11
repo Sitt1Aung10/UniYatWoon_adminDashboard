@@ -18,18 +18,19 @@ main {
 }
 .userList {
   display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 20px 20px;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  padding: 10px 10px;
   box-sizing: border-box;
 }
 .userCard {
   background-color: floralwhite;
-  width: 400px;
+  width: 350px;
   height: 230px;
   padding:10px 0;
   box-sizing: border-box;
   padding-left: 10px;
-  font-size: 14px;
+  font-size: 12px;
   text-align: left;
   border: 2px solid #000;
   border-radius: 10px;
@@ -48,6 +49,10 @@ main {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+.userCard > div:last-child > div {
+  width: 170px;
+    
 }
 .userCard > h1 {
   width: max-content;

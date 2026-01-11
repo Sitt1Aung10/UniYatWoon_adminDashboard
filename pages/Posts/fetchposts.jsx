@@ -8,9 +8,11 @@ import '../Posts/postCss.css';
 const Fetchposts = () => {
     const [posts, setPosts] = useState([]);
     const [selectedPostId, setSelectedPostId] = useState(null);
+    const [expandedPost, setExpandedPost] = useState(null);
 
-    <Fetchposts onReport={setSelectedPostId} />
-    { selectedPostId && <Reportposts postId={selectedPostId} /> }
+
+    // <Fetchposts onReport={setSelectedPostId} />
+    // { selectedPostId && <Reportposts postId={selectedPostId} /> }
 
     // const baseURL = "http://localhost/UniYatWoon_AdminPanel/";
 
@@ -21,6 +23,34 @@ const Fetchposts = () => {
             .then(data => setPosts(data))
             .catch(err => setPosts([]));
     }, []);
+
+    const mediaStyle = {
+        minWidth: "330px",
+        objectFit: "contain",
+        scrollSnapAlign: "start",
+    };
+
+    const arrowStyle = (side) => ({
+        position: "absolute",
+        top: "50%",
+        transform: "translateY(-50%)",
+        [side]: "5px",
+        background: "rgba(0,0,0,0.5)",
+        color: "#fff",
+        border: "none",
+        borderRadius: "50%",
+        width: "30px",
+        height: "30px",
+        fontSize: "25px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        zIndex: 2,
+    });
+
+
+
     return (
         <div className='post_container'>
             {posts.map(post => (
@@ -28,25 +58,91 @@ const Fetchposts = () => {
                     <h1 className='username'>{post.Username}</h1>
                     <h1 className='created_at'>{post.Created_at}</h1>
                     <img className='pf' src={`${BASE_URL}/${encodeURI(post.Profile_photo)}`} />
-                    <p className='description'>{post.Description}</p>
+                    <p
+                        style={{
+                            maxHeight: expandedPost === post.id ? "1000px" : "20px",
+                            overflow: "hidden",
+                            transition: "max-height 0.3s ease",
+                        }}
+                    >
+                        {post.Description}
+                    </p>
+
+                    {post.Description.length > 100 && (
+                        <span
+                            onClick={() =>
+                                setExpandedPost(expandedPost === post.id ? null : post.id)
+                            }
+                            style={{
+                                color: "#1877f2",
+                                cursor: "pointer",
+                                fontSize: "14px",
+                                zIndex: 9,
+                            }}
+                        >
+                            {expandedPost === post.id ? "See less" : "See more"}
+                        </span>
+                    )}
 
                     {/* Display media */}
-                    {post.media.length > 0 && post.media.map((m, idx) => (
-                        m.Media_type === "image" ? (
-                            <img className='media'
-                                src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
-                                alt="post image"
-                            />
-                        ) : (
-                            <video
-                                className='media'
-                                key={idx}
-                                controls
-                                src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
-                                style={{ maxWidth: "300px", display: "block", marginBottom: "1rem" }}
-                            />
-                        )
-                    ))}
+                    <div className='media_container'>
+                        {post.media.length > 0 && (
+                            <div style={{ position: "relative", width: "300px" }}>
+
+                                {/* LEFT ARROW */}
+                                <button
+                                    onClick={(e) => {
+                                        const box = e.currentTarget.nextSibling;
+                                        box.scrollBy({ left: -330, behavior: "smooth" });
+                                    }}
+                                    style={arrowStyle("left")}
+                                >
+                                    ‹
+                                </button>
+
+                                {/* MEDIA */}
+                                <div
+                                    className="hide-scrollbar"
+                                    style={{
+                                        display: "flex",
+                                        overflowX: "auto",
+                                        scrollSnapType: "x mandatory",
+                                    }}
+                                >
+                                    {post.media.map((m, idx) =>
+                                        m.Media_type === "image" ? (
+                                            <img
+                                                key={idx}
+                                                src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                                                alt=""
+                                                style={mediaStyle}
+                                            />
+                                        ) : (
+                                            <video
+                                                key={idx}
+                                                controls
+                                                src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                                                style={mediaStyle}
+                                            />
+                                        )
+                                    )}
+                                </div>
+
+                                {/* RIGHT ARROW */}
+                                <button
+                                    onClick={(e) => {
+                                        const box = e.currentTarget.previousSibling;
+                                        box.scrollBy({ left: 330, behavior: "smooth" });
+                                    }}
+                                    style={arrowStyle("right")}
+                                >
+                                    ›
+                                </button>
+                            </div>
+                        )}
+
+
+                    </div>
                     <button className='reportBtn' onClick={() => setSelectedPostId(post.id)}>Report Post</button>
 
                     {selectedPostId === post.id && (

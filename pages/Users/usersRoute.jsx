@@ -1,5 +1,6 @@
 import React from 'react'
 import Users from './users'
+import Profile from './profile'
 import MainLayout from '../../src/components/layout'
 
 const usersRoute = {
@@ -9,6 +10,10 @@ const usersRoute = {
         {
             path: '/users',
             element: <Users />,
+        },
+        {
+            path: '/profile',
+            element: <Profile />,
         }
     ]
 }

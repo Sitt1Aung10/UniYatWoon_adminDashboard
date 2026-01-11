@@ -10,8 +10,8 @@ const Reportposts = ({ post_id, onReportComplete }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("postId", post_id);
-    formData.append("reason", reason);
+    formData.append("post_id", post_id);
+    formData.append("Reason", reason);
 
     try {
       const res = await fetch(endpoints.reportposts, {
@@ -35,7 +35,7 @@ const Reportposts = ({ post_id, onReportComplete }) => {
         <label>
           <input
             type="radio"
-            name="reason"
+            name="Reason"
             value="spam"
             checked={reason === "spam"}
             onChange={(e) => setReason(e.target.value)}
@@ -46,7 +46,7 @@ const Reportposts = ({ post_id, onReportComplete }) => {
         <label>
           <input
             type="radio"
-            name="reason"
+            name="Reason"
             value="abuse"
             checked={reason === "abuse"}
             onChange={(e) => setReason(e.target.value)}
@@ -57,7 +57,7 @@ const Reportposts = ({ post_id, onReportComplete }) => {
         <label>
           <input
             type="radio"
-            name="reason"
+            name="Reason"
             value="nudity"
             checked={reason === "nudity"}
             onChange={(e) => setReason(e.target.value)}
@@ -68,7 +68,7 @@ const Reportposts = ({ post_id, onReportComplete }) => {
         <label>
           <input
             type="radio"
-            name="reason"
+            name="Reason"
             value="false_information"
             checked={reason === "false_information"}
             onChange={(e) => setReason(e.target.value)}
