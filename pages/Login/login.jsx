@@ -24,7 +24,7 @@ function Login() {
         },
         credentials: 'include', // important: sends cookies
         body: JSON.stringify({
-          Username,
+          // Username,
           Email,
           Password,
         })
@@ -35,7 +35,7 @@ function Login() {
     console.log("LOGIN RESPONSE:", data);
 
     if (data.success) {
-      setUser(data.Username); // 🔥 THIS updates UI
+      setUser(data.Email); // 🔥 THIS updates UI
       // setUser({ username: data.Username, uuid: data.user_uuid });
 
       // localStorage.setItem("Username", data.Username);
@@ -62,13 +62,13 @@ function Login() {
         <h1>Welcome, {user} 👋</h1>
       ) : (
         <form>
-          <input
+          {/* <input
             type="text"
             name='Username'
             value={Username}
             placeholder="Username"
             onChange={(e) => setUsername(e.target.value)}
-          />
+          /> */}
 
           <input
             type="email"
