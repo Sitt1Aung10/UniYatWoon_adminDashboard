@@ -17,7 +17,7 @@ const header = () => {
       <header className='w-full h-20 fixed top-0 left-0 px-10 py-5'
         style={{
           backgroundColor: '#3E2E87',
-          zIndex: '1',
+          zIndex: '9',
           display: 'flex',
           justifyContent: 'right',
           alignItems: 'center'

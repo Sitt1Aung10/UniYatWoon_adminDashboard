@@ -11,10 +11,13 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const cleanUsername = username.trim();
       try {
         // ✅ append username as query param
-        const res = await fetch(`${endpoints.profile}?Username=${encodeURIComponent(cleanUsername)}`, {
+        const url = username
+          ? `${endpoints.profile}?Username=${encodeURIComponent(username.trim())}`
+          : `${endpoints.profile}`; // 👈 no username → session user
+
+        const res = await fetch(url, {
           method: "GET", // GET is fine for $_GET
           credentials: "include",
         });
@@ -46,7 +49,7 @@ const Profile = () => {
               <div key={post.id} className="postCard">
                 <h3>{post.Username}</h3>
                 <p>{post.Major}</p>
-                <img src={`http://localhost/UniYatWoon_AdminPanel/${post.Profile_photo}`} alt="Profile" className="profilePicture"/>
+                <img src={`http://localhost/UniYatWoon_AdminPanel/${post.Profile_photo}`} alt="Profile" className="profilePicture" />
                 <p>{post.Description}</p>
 
                 {/* Media */}

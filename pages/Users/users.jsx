@@ -23,7 +23,9 @@ const Users = () => {
     // }, []);
     const navigate = useNavigate();
     const fetchUsers = () => {
-        fetch(endpoints.users)
+        fetch(endpoints.users, {
+            credentials: "include",
+        })
             .then(res => res.json())
             .then(data => {
                 setUsers(data.users);
@@ -45,6 +47,7 @@ const Users = () => {
         try {
             const res = await fetch(endpoints.ban_account, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 },

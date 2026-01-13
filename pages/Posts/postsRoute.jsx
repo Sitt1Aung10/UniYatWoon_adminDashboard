@@ -1,8 +1,10 @@
 import React from 'react'
 import FetchPosts from './fetchposts'
 import Addposts from './addposts'
+import Savedposts from './fetchsavedposts'
 import Fetchreportposts from './fetchreportposts'
 import MainLayout from '../../src/components/layout'
+import Fetchsavedposts from './fetchsavedposts'
 
 const postsRoute =  {
  path: '/',
@@ -19,6 +21,10 @@ const postsRoute =  {
          {
             path : '/reports',
             element: <Fetchreportposts />,
+         },
+         {
+            path : '/fetchsavedposts',
+            element: <Fetchsavedposts />,
          }
      ]
  }

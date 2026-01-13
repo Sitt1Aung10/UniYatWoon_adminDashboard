@@ -9,6 +9,9 @@ const Fetchposts = () => {
     const [posts, setPosts] = useState([]);
     const [selectedPostId, setSelectedPostId] = useState(null);
     const [expandedPost, setExpandedPost] = useState(null);
+    const [savingPostId, setSavingPostId] = useState(null); // tracks loading
+    const [savedPosts, setSavedPosts] = useState([]);       // track saved posts
+
 
 
     // <Fetchposts onReport={setSelectedPostId} />
@@ -49,6 +52,34 @@ const Fetchposts = () => {
         zIndex: 2,
     });
 
+    const handleSavePost = async (postId) => {
+        try {
+            setSavingPostId(postId); // show loading for this post
+
+            const res = await fetch(endpoints.savedposts, {
+                method: "POST",
+                credentials: "include", // important: send PHP session
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ post_id: postId }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // Add postId to savedPosts array
+                setSavedPosts(prev => [...prev, postId]);
+            } else {
+                alert(data.message || "Failed to save post");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong while saving the post");
+        } finally {
+            setSavingPostId(null);
+        }
+    };
 
 
     return (
@@ -60,7 +91,7 @@ const Fetchposts = () => {
                     <img className='pf' src={`${BASE_URL}/${encodeURI(post.Profile_photo)}`} />
                     <p
                         style={{
-                            maxHeight: expandedPost === post.id ? "1000px" : "20px",
+                            maxHeight: expandedPost === post.id ? "1000px" : "25px",
                             overflow: "hidden",
                             transition: "max-height 0.3s ease",
                         }}
@@ -144,6 +175,17 @@ const Fetchposts = () => {
 
                     </div>
                     <button className='reportBtn' onClick={() => setSelectedPostId(post.id)}>Report Post</button>
+                    <button
+                        className='saveBtn'
+                        onClick={() => handleSavePost(post.id)}
+                        disabled={savingPostId === post.id || savedPosts.includes(post.id)}
+                    >
+                        {savedPosts.includes(post.id)
+                            ? "Saved ✅"
+                            : savingPostId === post.id
+                                ? "Saving..."
+                                : "Save Post"}
+                    </button>
 
                     {selectedPostId === post.id && (
                         <Reportposts post_id={post.id} onReportComplete={() => setSelectedPostId(null)} />
