@@ -7,9 +7,6 @@ const Addposts = () => {
 
   const handlePost = async (e) => {
     e.preventDefault();
-
-    
-
     const formData = new FormData();
     formData.append("Description", Description);
 

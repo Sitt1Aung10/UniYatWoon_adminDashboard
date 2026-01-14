@@ -3,6 +3,7 @@ import FetchPosts from './fetchposts'
 import Addposts from './addposts'
 import Savedposts from './fetchsavedposts'
 import Fetchreportposts from './fetchreportposts'
+import Comments from './comments'
 import MainLayout from '../../src/components/layout'
 import Fetchsavedposts from './fetchsavedposts'
 
@@ -25,6 +26,10 @@ const postsRoute =  {
          {
             path : '/fetchsavedposts',
             element: <Fetchsavedposts />,
+         },
+         {
+            path : '/comments',
+            element: <Comments />,
          }
      ]
  }

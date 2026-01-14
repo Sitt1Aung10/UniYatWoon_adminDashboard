@@ -1,3 +1,4 @@
+import { comment } from "postcss";
 import Savedposts from "../pages/Posts/fetchsavedposts";
 import users from "../pages/Users/users";
 
@@ -29,6 +30,8 @@ export const BASE_URL = "http://localhost/UniYatWoon_AdminPanel"
    addposts: `${BASE_URL}/addposts.php`,
 
    deletePost: `${BASE_URL}/deletepost.php`,
+
+   comment  : `${BASE_URL}/comments.php`,
 
   }
 

@@ -3,11 +3,13 @@ import endpoints from '../../endpoints/endpoints'
 import { BASE_URL } from '../../endpoints/endpoints';
 import { useState, useEffect } from 'react';
 import Reportposts from './reportposts';
+import Comments from './comments';
 import '../Posts/postCss.css';
 
 const Fetchposts = () => {
     const [posts, setPosts] = useState([]);
     const [selectedPostId, setSelectedPostId] = useState(null);
+    const [comments, setComments] = useState([]);
     const [expandedPost, setExpandedPost] = useState(null);
     const [savingPostId, setSavingPostId] = useState(null); // tracks loading
     const [savedPosts, setSavedPosts] = useState([]);       // track saved posts
@@ -175,6 +177,7 @@ const Fetchposts = () => {
 
                     </div>
                     <button className='reportBtn' onClick={() => setSelectedPostId(post.id)}>Report Post</button>
+                    <button className='commentBtn' onClick={() => setComments(post.id)}>Comments</button>
                     <button
                         className='saveBtn'
                         onClick={() => handleSavePost(post.id)}
@@ -190,6 +193,11 @@ const Fetchposts = () => {
                     {selectedPostId === post.id && (
                         <Reportposts post_id={post.id} onReportComplete={() => setSelectedPostId(null)} />
                     )}
+                    {
+                    comments === post.id && (
+                        <Comments post_id={post.id} commentComplete={() => setComments(null)} />
+                    )
+                    }
                 </div>
             ))}
         </div>
