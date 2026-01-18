@@ -1,79 +1,104 @@
-import React from 'react'
-import endpoints from '../../endpoints/endpoints';
-import { useState, useEffect } from 'react';
-import { data } from 'autoprefixer';
+import React, { useState, useEffect } from 'react';
+import endpoints, { BASE_URL } from '../../endpoints/endpoints';
 import { useParams } from 'react-router-dom';
+
+/* ===================== AUTH HELPER ===================== */
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 const Profile = () => {
   const [userProfile, setUserProfile] = useState(null);
-
-  const { username } = useParams();
+  const { user_uuid } = useParams();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // ✅ append username as query param
-        const url = username
-          ? `${endpoints.profile}?Username=${encodeURIComponent(username.trim())}`
-          : `${endpoints.profile}`; // 👈 no username → session user
+        const url = user_uuid
+          ? `${endpoints.profile}?user_uuid=${encodeURIComponent(user_uuid.trim())}`
+          : endpoints.profile;
 
         const res = await fetch(url, {
-          method: "GET", // GET is fine for $_GET
-          credentials: "include",
+          method: "GET",
+          headers: {
+            ...getAuthHeader() // ✅ JWT (optional)
+          }
         });
 
-        if (!res.ok) throw new Error("Failed to fetch profile");
-
         const data = await res.json();
-        setUserProfile(data);
+        console.log("PROFILE RESPONSE:", data);
+
+        // ✅ always normalize shape
+        setUserProfile({
+          isOwnProfile: !!data.isOwnProfile,
+          posts: Array.isArray(data.posts) ? data.posts : []
+        });
+
       } catch (err) {
         console.error(err);
+        setUserProfile({ isOwnProfile: false, posts: [] });
       }
     };
 
     fetchProfile();
-  }, [username]);
+  }, [user_uuid]);
 
+  if (!userProfile) {
+    return <p>Loading profile...</p>;
+  }
 
   return (
-    <>
-      {!userProfile ? (
-        <p>Loading profile...</p>
+    <div>
+      {/* ===================== POSTS ===================== */}
+      {userProfile.posts.length === 0 ? (
+        <p>No posts found.</p>
       ) : (
-        <div>
-          {/* Posts */}
-          {userProfile.posts.length === 0 ? (
-            <p>No posts found.</p>
-          ) : (
-            userProfile.posts.map(post => (
-              <div key={post.id} className="postCard">
-                <h3>{post.Username}</h3>
-                <p>{post.Major}</p>
-                <img src={`http://localhost/UniYatWoon_AdminPanel/${post.Profile_photo}`} alt="Profile" className="profilePicture" />
-                <p>{post.Description}</p>
+        userProfile.posts.map(post => (
+          <div key={post.id} className="postCard">
+            <h3>{post.Username}</h3>
+            <p>{post.Major}</p>
 
-                {/* Media */}
-                {post.media && post.media.length > 0 && (
-                  <div className="mediaContainer">
-                    {post.media.map((m, index) => (
-                      <img
-                        key={index}
-                        src={`http://localhost/UniYatWoon_AdminPanel/${m.Media_url}`}
-                        alt="post media"
-                      />
-                    ))}
-                  </div>
+            <img
+              src={
+                post.Profile_photo
+                  ? `${BASE_URL}/${encodeURI(post.Profile_photo)}`
+                  : `${BASE_URL}/uploads/default-profile.png`
+              }
+              alt="Profile"
+              className="profilePicture"
+            />
+
+
+            <p>{post.Description}</p>
+
+            {/* ===================== MEDIA ===================== */}
+            {Array.isArray(post.media) && post.media.length > 0 && (
+              <div className="mediaContainer">
+                {post.media.map((m, index) =>
+                  m.Media_type === "image" ? (
+                    <img
+                      key={index}
+                      src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                      alt="post media"
+                    />
+                  ) : (
+                    <video
+                      key={index}
+                      controls
+                      src={`${BASE_URL}/${encodeURI(m.Media_url)}`}
+                    />
+                  )
                 )}
-
-                <small>{post.Created_at}</small>
               </div>
-            ))
-          )}
-        </div>
+            )}
+
+            <small>{post.Created_at}</small>
+          </div>
+        ))
       )}
-    </>
+    </div>
+  );
+};
 
-  )
-}
-
-export default Profile
+export default Profile;

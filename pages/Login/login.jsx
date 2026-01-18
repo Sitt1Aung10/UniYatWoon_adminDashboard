@@ -1,91 +1,72 @@
 import { useState } from "react";
-import React from "react";
 import endpoints from "../../endpoints/endpoints";
-import Profile from "../Login/get_session";
 
 function Login() {
-  const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoggedIn(true);
 
-    const res = await fetch(
-      (endpoints.login),
-      {
+    try {
+      const res = await fetch(endpoints.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        credentials: 'include', // important: sends cookies
-        body: JSON.stringify({
-          // Username,
-          Email,
-          Password,
-        })
+        body: JSON.stringify({ Email, Password })
+      });
+
+      const data = await res.json();
+      console.log("LOGIN RESPONSE:", data);
+
+      if (data.success) {
+        // ✅ save JWT
+        localStorage.setItem("token", data.token);
+
+        // ✅ save user info (UI / later use)
+        const userData = {
+          username: data.username,
+          user_uuid: data.user_uuid
+        };
+
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+
+      } else {
+        alert(data.message);
       }
-    );
 
-    const data = await res.json();
-    console.log("LOGIN RESPONSE:", data);
-
-    if (data.success) {
-      setUser(data.Email); // 🔥 THIS updates UI
-      // setUser({ username: data.Username, uuid: data.user_uuid });
-
-      // localStorage.setItem("Username", data.Username);
-      // localStorage.setItem("user_uuid", data.user_uuid);
-      // const storedUsername = localStorage.getItem("Username");
-      // const storedUuid = localStorage.getItem("user_uuid");
-      // if (storedUsername && storedUuid) {
-      //   console.log("localStorage saved:", { storedUsername, storedUuid });
-      // } else {
-      //   console.log("localStorage save failed:", { storedUsername, storedUuid });
-      // }
-      // }
-    } else {
-      alert(data.message);
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Login failed");
     }
   };
 
-
-
   return (
     <>
-         <Profile />  
-        {user ? (
-        <h1>Welcome, {user} 👋</h1>
+      {user ? (
+        <h1>Welcome, {user.username} 👋</h1>
       ) : (
-        <form>
-          {/* <input
-            type="text"
-            name='Username'
-            value={Username}
-            placeholder="Username"
-            onChange={(e) => setUsername(e.target.value)}
-          /> */}
-
+        <form onSubmit={handleLogin}>
           <input
             type="email"
-            name='Email'
             value={Email}
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <input
             type="password"
-            name="Password"
             value={Password}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
-          <button onClick={handleLogin} type="submit">Login</button>
+
+          <button type="submit">Login</button>
         </form>
       )}
     </>

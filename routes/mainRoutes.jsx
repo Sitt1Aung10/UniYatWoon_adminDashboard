@@ -17,7 +17,7 @@ const MainRoutes = {
             element: <Dashboard />,
         },
         {
-            path: '/profile/:username',
+            path: '/profile/:user_uuid',
             element: <Profile />,
         }
     ]

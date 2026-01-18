@@ -9,9 +9,17 @@ const Fetchreportposts = () => {
   const [expandedPost, setExpandedPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   useEffect(() => {
-    fetch(endpoints.fetchreportposts)
+    fetch(`${endpoints.fetchreportposts}`, {
+      headers: {
+        ...getAuthHeader()
+      }
+    })
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch reports");
         return res.json();
@@ -59,32 +67,37 @@ const Fetchreportposts = () => {
 
 
 
-  const handleDelete = async (post_id) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
+  const handleDelete = async (Reported_post_id) => {
+  if (!Reported_post_id) {
+    alert("Invalid post ID");
+    return;
+  }
 
-    try {
-      const res = await fetch(endpoints.deletePost, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ Reported_post_id: post_id }),
-      });
+  try {
+    const res = await fetch(endpoints.deletePost, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeader()
+      },
+      body: JSON.stringify({ Reported_post_id }) // string is fine
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Delete failed");
+    if (!data.success) throw new Error(data.message || "Delete failed");
 
-      // Remove deleted post from UI
-      setReportPosts(prev =>
-        prev.filter(r => r.Reported_post_id !== post_id)
-      );
+    // Remove from UI
+    setReportPosts(prev =>
+      prev.filter(r => r.Reported_post_id !== Reported_post_id)
+    );
 
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete post");
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+
 
 
   if (loading) return <p>Loading reports...</p>;

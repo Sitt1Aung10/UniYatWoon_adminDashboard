@@ -42,6 +42,12 @@ const Addposts = () => {
         onChange={(e) => setMedia(e.target.files[0])}
       />
 
+      <select>
+        <option onChange={e.target.value} value="normal">Normal Post</option>
+        <option onChange={e.target.value} value="lost_found">Lost & Found</option>
+        <option onChange={e.target.value} value="announcement">Announcement</option>
+      </select>
+
       <button type="submit">Post</button>
     </form>
   );

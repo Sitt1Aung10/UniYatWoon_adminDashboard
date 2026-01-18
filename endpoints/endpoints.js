@@ -2,12 +2,12 @@ import { comment } from "postcss";
 import Savedposts from "../pages/Posts/fetchsavedposts";
 import users from "../pages/Users/users";
 
-export const BASE_URL = "http://localhost/UniYatWoon_AdminPanel"
+export const BASE_URL = "http://api.uniyatwon.com"
 
   const endpoints = {
    users: `${BASE_URL}/users.php`,
 
-   login: `${BASE_URL}/login.php`,
+   login: `${BASE_URL}/testlogin.php`,
 
    logout: `${BASE_URL}/logout.php`,
 
